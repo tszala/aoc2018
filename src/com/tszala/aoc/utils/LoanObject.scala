@@ -1,4 +1,4 @@
-package com.tszala.aoc.day1
+package com.tszala.aoc.utils
 
 object LoanObject {
     def using[A <: {def close(): Unit}, B](resource: A)(f: A=>B): B =

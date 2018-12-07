@@ -1,12 +1,13 @@
 package com.tszala.aoc.day1
 
-import scala.io.Source
-import scala.util.{Failure, Success, Try}
+import com.tszala.aoc.utils.{LinesReader}
+
+import scala.util.{Failure, Success}
 
 object Day1 {
   def main(args: Array[String]) = {
     val filename = "src\\com\\tszala\\aoc\\day1\\input.txt"
-    val frequencies:List[Int] = readTextFileWithTry(filename) match {
+    val frequencies:List[Int] = LinesReader.readTextFileWithTry(filename) match {
       case Success(l) => l.map(_.toInt)
       case Failure(e) => println(e)
         System.exit(1)
@@ -22,15 +23,6 @@ object Day1 {
     //println(s"Duplicate frequency is ${findDuplicateFrequency(frequencies,0,foundFrequencies)}")
 
     println(s"Duplicate frequency is ${findDuplicateFrequencyLoops(frequencies,0)}")
-  }
-
-  def readTextFileWithTry(f:String) :Try[List[String]] = {
-    Try {
-      val lines = LoanObject.using(Source.fromFile(f)) { source =>
-        (for (line <- source.getLines) yield line).toList
-      }
-      lines
-    }
   }
 
   def findDuplicateFrequency(inputs:List[Int], currentValue: Int, frequencies: scala.collection.mutable.Set[Int]): Int = {
