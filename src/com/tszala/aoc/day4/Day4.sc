@@ -72,9 +72,7 @@ def countSleepTime(actions: List[GuardAction]):(Long, List[Int]) = {
   countSleepTimeInternal(actions,actions.head.time,(0L, List.empty))
 }
 
-
-
-val guardSleeps = guardActions
+val guardSleeps: Map[Guard, (Long, List[Int])] = guardActions
   .groupBy(g=>g.guard)
   .mapValues(actions => actions.sortWith((a,b)=>b.time.isAfter(a.time)))
   .mapValues(actions => countSleepTime(actions.toList))
@@ -83,3 +81,17 @@ val longestSleepingGuard = guardSleeps.maxBy(a=>a._2._1)
 //minute and frequency
 val (minute, frequency) = longestSleepingGuard._2._2.groupBy(x=>x).mapValues(elems=>elems.size).maxBy(elem=>elem._2)
 println(s"The minute in which the guard ${longestSleepingGuard._1.number} is sleeping is ${minute}")
+
+val groupedMinutesByGuards: Map[Guard, (Int, Int)] =
+  guardSleeps.mapValues(v => v._2.groupBy(x=>x).mapValues(x=>x.size).toList)
+    //take guard with some minutes
+    .filter(guard => guard._2.size > 0)
+  .mapValues(_.maxBy(e=>e._2))
+
+val part2Guard = groupedMinutesByGuards.maxBy(g=>g._2._2)
+println(s"The most sleeping guard is ${part2Guard._1.number} with minute ${part2Guard._2._1} sleeping ${part2Guard._2._2}, result is ${part2Guard._1.number * part2Guard._2._1}")
+
+
+
+
+
